@@ -14,14 +14,11 @@ contract FreelanceEscrow {
         isWorkApproved = false;
     }
 
-    // ВИПРАВЛЕНО ВРАЗЛИВІСТЬ ДОСТУПУ: додано require, щоб лише клієнт міг схвалити роботу
     function approveWork() public {
         require(msg.sender == client, "Only client can approve");
         isWorkApproved = true;
     }
 
-    // ЗАСТОСОВАНО ПАТЕРН CHECKS-EFFECTS-INTERACTIONS: обнулення балансу відбувається ДО виклику .call
-    // Це повністю захищає контракт від повторного входження (Reentrancy attack)
     function withdrawPayment() public {
         require(isWorkApproved, "Work is not approved yet");
         require(paymentAmount > 0, "Payment already withdrawn");
